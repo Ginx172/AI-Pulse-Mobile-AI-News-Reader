@@ -3,10 +3,11 @@
 ## ✅ Completed (Steps 1–4)
 
 - [x] Repo scaffold (README, LICENSE, .gitignore, docker-compose.yml)
-- [x] Source catalog — `sources/top_100_ai_sources.yaml` (100 entries)
+- [x] Source catalog — `sources/top_100_ai_sources.yaml` (100 entries, now 103)
 - [x] Backend MVP — FastAPI + SQLAlchemy + scrapers + ranking + summariser + scheduler
 - [x] Mobile scaffold — Expo + expo-router Feed/Detail/Settings screens
 - [x] Docs — Architecture diagram + Roadmap
+- [x] Custom sources API — `POST/PATCH/DELETE /sources/custom`, `PATCH /sources/{id}`, `sources_loader.py`
 
 ---
 

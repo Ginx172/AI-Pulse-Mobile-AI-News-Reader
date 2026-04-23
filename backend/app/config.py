@@ -21,5 +21,12 @@ class Settings(BaseSettings):
         "top_100_ai_sources.yaml",
     )
 
+    # Path to the user custom sources YAML
+    custom_sources_yaml: str = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+        "sources",
+        "custom_sources.yaml",
+    )
+
 
 settings = Settings()

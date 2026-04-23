@@ -1,0 +1,36 @@
+# Personal sources added by the user. This file is a template/example.
+# Copy it to custom_sources.yaml (already exists as an empty starter) and add your own entries.
+# This file is NOT loaded at runtime — it is only for reference.
+#
+# Schema is identical to top_100_ai_sources.yaml with two extra fields:
+#   active:    bool  — set false to disable without deleting (default: true)
+#   added_at:  str   — ISO-8601 timestamp of when you added this source
+#   added_by:  str   — who added it ("user", "api", etc.)
+#
+# Example entries (all commented out):
+#
+# sources:
+#
+#   - id: my-favorite-blog
+#     name: "My Favorite Blog"
+#     url: "https://example.com"
+#     rss_url: "https://example.com/feed.xml"
+#     category: custom
+#     type: blog
+#     language: en
+#     weight: 1.2          # custom sources default to 1.2 (user-picked = trusted)
+#     active: true
+#     added_at: "2026-04-23T19:00:00Z"
+#     added_by: "user"
+#
+#   - id: simon-willison-blog
+#     name: "Simon Willison's Weblog"
+#     url: "https://simonwillison.net"
+#     rss_url: "https://simonwillison.net/atom/everything/"
+#     category: custom
+#     type: blog
+#     language: en
+#     weight: 1.2
+#     active: true
+#     added_at: "2026-04-23T19:00:00Z"
+#     added_by: "user"

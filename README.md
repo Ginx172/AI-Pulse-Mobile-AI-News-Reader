@@ -10,7 +10,7 @@
 .
 ├── backend/          # Python 3.11 FastAPI backend
 ├── mobile/           # React Native + Expo (TypeScript, expo-router)
-├── sources/          # Machine-readable catalog of the 100 AI sources (YAML)
+├── sources/          # Machine-readable catalog of 103 AI sources (YAML) + custom sources
 └── docs/             # Architecture diagram, roadmap
 ```
 
@@ -31,7 +31,7 @@ Key endpoints:
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | Liveness probe |
-| GET | `/sources` | All 100 sources from YAML |
+| GET | `/sources` | All 103 sources from YAML |
 | GET | `/articles/today` | Top 25 articles for today |
 | GET | `/articles/{id}` | Single article detail |
 
