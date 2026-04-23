@@ -1,0 +1,28 @@
+{
+  "name": "ai-pulse",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~51.0.0",
+    "expo-router": "~3.5.0",
+    "react": "18.2.0",
+    "react-native": "0.74.0",
+    "expo-web-browser": "~13.0.3",
+    "expo-notifications": "~0.28.3",
+    "expo-status-bar": "~1.12.1",
+    "expo-linking": "~6.3.1",
+    "expo-constants": "~16.0.2",
+    "@react-navigation/native": "^6.1.17"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@types/react": "~18.2.79",
+    "typescript": "~5.3.3"
+  }
+}
