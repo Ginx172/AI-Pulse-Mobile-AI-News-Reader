@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - sqlite_data:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/news.db
+      - TZ=Europe/Bucharest
+      - DAILY_RUN_HOUR=8
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+
+  # Postgres service (uncomment for production)
+  # db:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: aipulse
+  #     POSTGRES_PASSWORD: changeme
+  #     POSTGRES_DB: aipulse
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+volumes:
+  sqlite_data:
+  # pg_data:
