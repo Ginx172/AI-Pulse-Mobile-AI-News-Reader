@@ -93,7 +93,7 @@ def run_daily() -> None:
     try:
         # Mark previous selections for today as unselected
         db.query(Article).filter(
-            Article.day == today, Article.selected_for_today == True  # noqa: E712
+            Article.day == today, Article.selected_for_today
         ).update({"selected_for_today": False})
         db.commit()
 

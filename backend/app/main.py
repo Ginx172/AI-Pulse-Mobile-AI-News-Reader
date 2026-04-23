@@ -77,7 +77,7 @@ def articles_today(db: Session = Depends(get_db)) -> list[Article]:
     today = datetime.date.today()
     return (
         db.query(Article)
-        .filter(Article.day == today, Article.selected_for_today == True)  # noqa: E712
+        .filter(Article.day == today, Article.selected_for_today)  # noqa: E712
         .order_by(Article.score.desc())
         .limit(25)
         .all()
