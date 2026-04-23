@@ -56,7 +56,7 @@ def test_sources(client):
     assert response.status_code == 200
     sources = response.json()
     assert isinstance(sources, list)
-    assert len(sources) == 100, f"Expected 100 sources, got {len(sources)}"
+    assert len(sources) == 103, f"Expected 103 sources, got {len(sources)}"
 
 
 # ─── Test 3: /articles/today returns list ─────────────────────────────────────

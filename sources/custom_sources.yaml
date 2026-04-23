@@ -1,0 +1,13 @@
+# AI Pulse — User custom sources
+#
+# Add your own sources here. This file is version-controlled so your additions
+# persist across deploys. It is loaded alongside top_100_ai_sources.yaml.
+#
+# Schema: same as top_100_ai_sources.yaml plus optional fields:
+#   active:    bool   — set false to disable without deleting (default: true)
+#   added_at:  str    — ISO-8601 timestamp
+#   added_by:  str    — "user" | "api"
+#
+# See custom_sources.example.yaml for full annotated examples.
+
+sources: []

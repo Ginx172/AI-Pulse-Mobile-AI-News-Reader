@@ -4,9 +4,6 @@ from __future__ import annotations
 import datetime
 import logging
 
-import yaml
-
-from app.config import settings
 from app.db import SessionLocal, create_tables
 from app.models import Article, Source
 from app.ranking import rank_and_select
@@ -14,16 +11,10 @@ from app.scrapers import ArticleDraft
 from app.scrapers import rss as rss_scraper
 from app.scrapers import hn as hn_scraper
 from app.scrapers import reddit as reddit_scraper
+from app.sources_loader import load_all_sources
 from app.summarizer import summarise
 
 logger = logging.getLogger(__name__)
-
-
-def _load_sources() -> list[dict]:
-    """Load sources from YAML catalog."""
-    with open(settings.sources_yaml, "r", encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
-    return data.get("sources", [])
 
 
 def _scrape_source(source: dict) -> list[ArticleDraft]:
@@ -64,10 +55,11 @@ def run_daily() -> None:
     logger.info("Daily pipeline starting …")
     create_tables()
 
-    sources = _load_sources()
-    source_weights = {s["id"]: s.get("weight", 1.0) for s in sources}
+    sources = load_all_sources()
+    # Use effective_weight (respects weight_override) for ranking
+    source_weights = {s["id"]: s.get("effective_weight", s.get("weight", 1.0)) for s in sources}
 
-    # 1. Scrape all sources
+    # 1. Scrape all active sources (inactive already filtered by load_all_sources)
     all_drafts: list[ArticleDraft] = []
     for source in sources:
         try:

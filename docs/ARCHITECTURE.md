@@ -4,7 +4,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      SOURCES (100)                              │
+│                      SOURCES (103+)                             │
 │  Blogs · Substack · YouTube · Podcasts · Reddit · arXiv · HN   │
 └────────────────────────┬────────────────────────────────────────┘
                          │
@@ -87,3 +87,24 @@ APScheduler `BackgroundScheduler` fires `pipeline.run_daily()` at **08:00** loca
 | Backend API | Railway |
 | Mobile build | Expo EAS |
 | Database (prod) | Railway Postgres |
+
+## Custom Sources
+
+Users can extend the source catalog without modifying the official YAML. The loader
+merges sources in this order (later entry wins on duplicate `id`):
+
+```
+official YAML → custom YAML → custom DB → overrides DB
+```
+
+| Layer | File / Table | Who edits it |
+|-------|-------------|--------------|
+| Official catalog | `sources/top_100_ai_sources.yaml` | Maintainers (PR) |
+| Custom YAML | `sources/custom_sources.yaml` | User (git edit) |
+| Custom DB | `custom_sources` table | `POST /sources/custom` API |
+| Overrides | `source_overrides` table | `PATCH /sources/{id}` API |
+
+`load_all_sources()` in `backend/app/sources_loader.py` performs the merge and applies
+`SourceOverride` active / weight_override values before returning the effective list.
+The pipeline skips any source where `effective_active == False`.
+

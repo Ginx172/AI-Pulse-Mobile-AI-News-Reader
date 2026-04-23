@@ -1,4 +1,8 @@
-# AI Pulse — Top 100 AI Sources Catalog
+# AI Pulse — Top 103 AI Sources Catalog
+
+This is the official curated list of **103 AI information sources** used by AI Pulse.
+The app also supports user-added custom sources via `custom_sources.yaml` (see
+[`docs/CUSTOM_SOURCES.md`](../docs/CUSTOM_SOURCES.md) for details).
 
 ## Schema
 
@@ -10,12 +14,12 @@ Each entry in `top_100_ai_sources.yaml` has the following fields:
 | `name` | string | Human-readable display name |
 | `url` | string | Canonical homepage URL |
 | `rss_url` | string \| null | RSS/Atom feed URL; `null` if not confidently known |
-| `category` | string | One of the 8 buckets (see below) |
+| `category` | string | One of the 9 buckets (see below) |
 | `type` | string | `blog`, `substack`, `youtube`, `podcast`, `reddit`, `arxiv`, `newsletter`, `aggregator` |
 | `language` | string | ISO 639-1 language code (almost all `en`) |
 | `weight` | float | Source quality weight for ranking (0.5–1.5) |
 
-## Categories (8 buckets)
+## Categories (9 buckets)
 
 | Bucket | Description |
 |--------|-------------|
@@ -27,8 +31,17 @@ Each entry in `top_100_ai_sources.yaml` has the following fields:
 | `reddit` | Subreddits |
 | `aggregator` | News aggregators, arXiv, GitHub Trending, etc. |
 | `newsletter` | Email newsletters (non-Substack) |
+| `podcasts` | Podcast shows (legacy alias for `podcast`) |
+| `aggregators_misc` | Mixed community hubs and aggregators |
+| `blogs_websites` | Blogs and data-science websites |
 
-## Adding a source
+## Custom Sources
+
+Users can add their own sources without editing this file. See
+[`custom_sources.yaml`](custom_sources.yaml) and [`docs/CUSTOM_SOURCES.md`](../docs/CUSTOM_SOURCES.md)
+for instructions.
+
+## Adding an official source
 
 1. Choose the next sequential ID in kebab-case.
 2. Fill all required fields; set `rss_url: null` if you are not certain of the feed URL.

@@ -1,6 +1,6 @@
-# AI Pulse — Top 100 AI Sources Catalog
+# AI Pulse — Top curated AI information sources (103 total)
 # License: CC-BY-4.0 (see LICENSE)
-# Total entries: 100
+# Total entries: 103
 #
 # Categories: research_lab | blog | substack | youtube | podcast | reddit | aggregator | newsletter
 # Types:       blog | substack | youtube | podcast | reddit | arxiv | newsletter | aggregator
@@ -930,3 +930,30 @@ sources:
     type: blog
     language: en
     weight: 1.2
+
+  - id: dwarkesh-podcast
+    name: "Dwarkesh Podcast"
+    url: "https://www.dwarkeshpatel.com/podcast"
+    rss_url: null   # feed returned bozo=True during verification — set null per policy
+    category: podcasts
+    type: podcast
+    language: en
+    weight: 1.2
+
+  - id: mlops-community
+    name: "MLOps Community (MLOps Live)"
+    url: "https://home.mlops.community"
+    rss_url: null   # community hub; no confirmed feed found
+    category: aggregators_misc
+    type: podcast
+    language: en
+    weight: 1.1
+
+  - id: kdnuggets
+    name: "KDnuggets"
+    url: "https://www.kdnuggets.com"
+    rss_url: null   # feed returned bozo=True during verification — set null per policy
+    category: blogs_websites
+    type: blog
+    language: en
+    weight: 1.0

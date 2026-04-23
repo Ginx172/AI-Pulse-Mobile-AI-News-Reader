@@ -21,6 +21,16 @@ export default function SettingsScreen() {
         </Text>
       </View>
 
+      {/* Manage Sources — stub for Phase 4 */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Manage Sources</Text>
+        <Text style={styles.body}>
+          {'☑ Official sources: 103 active\n'}
+          {'[+] Add custom source          → TODO (wired in Phase 4)\n'}
+          {'[⚙] Toggle sources             → TODO (wired in Phase 4)'}
+        </Text>
+      </View>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Coming soon</Text>
         <Text style={styles.body}>
