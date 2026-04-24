@@ -81,3 +81,7 @@ eas.json.local
 
 # Docker
 .dockerignore
+
+# Local-only folders
+LOGO/
+/package-lock.json
