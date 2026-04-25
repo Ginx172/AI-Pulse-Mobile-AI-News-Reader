@@ -35,7 +35,9 @@ def _serialize_run(run: PipelineRun) -> dict[str, Any]:
 
 
 @router.post("/run")
-def trigger_pipeline(x_admin_api_key: Optional[str] = Header(default=None)) -> dict[str, Any]:
+def trigger_pipeline(
+    x_admin_api_key: Optional[str] = Header(default=None, alias="X-Admin-Api-Key"),
+) -> dict[str, Any]:
     """Trigger the daily pipeline manually. Protected by X-Admin-Api-Key header."""
     if not settings.admin_api_key:
         raise HTTPException(status_code=503, detail="Admin API key is not configured")
