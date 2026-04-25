@@ -20,6 +20,8 @@
 
 ## Step 6 — Scheduler live & pipeline hardening
 
+- [x] GitHub Actions CI runs `pytest` on every PR and push to `main`
+
 - [ ] Smoke-test the full pipeline against live RSS feeds
 - [ ] Handle sources with no RSS (html.py fallback for sites like DeepMind Blog)
 - [ ] Add pipeline run metadata table (run_at, articles_fetched, articles_selected)
