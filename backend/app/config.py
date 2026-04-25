@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./news.db"
     tz: str = "Europe/Bucharest"
     daily_run_hour: int = 8
+    admin_api_key: str = ""
 
     # Path to the sources YAML catalog
     sources_yaml: str = os.path.join(

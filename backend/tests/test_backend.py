@@ -177,3 +177,85 @@ def test_summarise_falls_back_to_extractive_without_keys(monkeypatch):
     assert len(result) > 0
     assert "Researchers at DeepMind" in result
 
+
+# ─── Test 7: Pipeline observability ──────────────────────────────────────────
+
+
+def test_pipeline_status_empty_returns_empty_list(client):
+    """GET /pipeline/status on a fresh DB returns {"runs": []}."""
+    response = client.get("/pipeline/status")
+    assert response.status_code == 200
+    data = response.json()
+    assert "runs" in data
+    assert isinstance(data["runs"], list)
+
+
+def test_pipeline_run_requires_admin_key_configured(client, monkeypatch):
+    """POST /pipeline/run with admin_api_key="" must return 503."""
+    monkeypatch.setattr("app.routers.pipeline.settings.admin_api_key", "")
+    response = client.post("/pipeline/run")
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Admin API key is not configured"
+
+
+def test_pipeline_run_rejects_wrong_key(client, monkeypatch):
+    """POST /pipeline/run with wrong header key must return 401."""
+    monkeypatch.setattr("app.routers.pipeline.settings.admin_api_key", "secret")
+    response = client.post("/pipeline/run", headers={"X-Admin-Api-Key": "wrong"})
+    assert response.status_code == 401
+
+
+def test_pipeline_run_records_run_row(client, monkeypatch):
+    """POST /pipeline/run with correct key runs the pipeline and records a row."""
+    monkeypatch.setattr("app.routers.pipeline.settings.admin_api_key", "secret")
+
+    # Monkeypatch heavy parts so no network is needed
+    import app.pipeline as _pipeline
+    import app.scrapers.rss as _rss
+    import app.scrapers.hn as _hn
+    import app.scrapers.reddit as _reddit
+    from app.scrapers import ArticleDraft
+    import datetime as _dt
+
+    fake_draft = ArticleDraft(
+        source_id="test-source",
+        url="https://example.com/fake-article",
+        title="Fake AI article for testing",
+        published_at=_dt.datetime.now(_dt.timezone.utc).replace(tzinfo=None),
+        raw_excerpt="Fake excerpt sentence one. Fake excerpt sentence two. Done.",
+    )
+
+    monkeypatch.setattr(_rss, "fetch", lambda _src: [fake_draft])
+    monkeypatch.setattr(_hn, "fetch", lambda _src: [])
+    monkeypatch.setattr(_reddit, "fetch", lambda _src: [])
+    monkeypatch.setattr("app.summarizer.summarise", lambda text, title="": text[:80])
+
+    response = client.post("/pipeline/run", headers={"X-Admin-Api-Key": "secret"})
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["trigger"] == "manual"
+    assert data["articles_fetched"] >= 0
+
+    # Also verify the row appears in /pipeline/status
+    status_resp = client.get("/pipeline/status")
+    assert status_resp.status_code == 200
+    runs = status_resp.json()["runs"]
+    assert len(runs) >= 1
+    assert any(r["status"] == "success" and r["trigger"] == "manual" for r in runs)
+
+
+def test_pipeline_run_records_failure(client, monkeypatch):
+    """POST /pipeline/run when pipeline raises persists a failed row and returns 500."""
+    monkeypatch.setattr("app.routers.pipeline.settings.admin_api_key", "secret")
+
+    import app.pipeline as _pipeline
+
+    def _boom(trigger: str = "scheduler"):
+        raise RuntimeError("test-induced pipeline failure")
+
+    monkeypatch.setattr(_pipeline, "run_daily", _boom)
+
+    response = client.post("/pipeline/run", headers={"X-Admin-Api-Key": "secret"})
+    assert response.status_code == 500
+

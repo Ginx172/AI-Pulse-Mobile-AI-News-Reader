@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime
+from datetime import timezone
 
 from sqlalchemy import Boolean, Column, Date, DateTime, Float, ForeignKey, Integer, String, Text
 
@@ -59,3 +60,20 @@ class SourceOverride(Base):
     source_id = Column(String, primary_key=True)
     active = Column(Boolean, default=True)
     weight_override = Column(Float, nullable=True)
+
+
+class PipelineRun(Base):
+    __tablename__ = "pipeline_runs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    started_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.datetime.now(timezone.utc),
+    )
+    finished_at = Column(DateTime(timezone=True), nullable=True)
+    status = Column(String(16), nullable=False, default="running")  # running | success | failed
+    articles_fetched = Column(Integer, nullable=False, default=0)
+    articles_selected = Column(Integer, nullable=False, default=0)
+    error = Column(Text, nullable=True)
+    trigger = Column(String(16), nullable=False, default="manual")  # manual | scheduler

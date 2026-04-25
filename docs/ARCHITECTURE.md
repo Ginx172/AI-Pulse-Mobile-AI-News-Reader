@@ -74,6 +74,41 @@
 APScheduler `BackgroundScheduler` fires `pipeline.run_daily()` at **08:00** local time
 (configurable via `DAILY_RUN_HOUR` env var).
 
+## Pipeline observability
+
+Every invocation of `pipeline.run_daily()` — whether triggered by the scheduler or via the
+admin API — writes exactly one row to the `pipeline_runs` table with timing, article counts,
+and final status (`running` → `success` | `failed`).
+
+Two new endpoints expose this data:
+
+| Endpoint | Auth | Description |
+|----------|------|-------------|
+| `POST /pipeline/run` | `X-Admin-Api-Key` header | Trigger the pipeline manually; returns the resulting run row |
+| `GET /pipeline/status?limit=10` | Public | Return the most recent N runs (max 50), newest-first |
+
+Example `GET /pipeline/status` response:
+
+```json
+{
+  "runs": [
+    {
+      "id": 4,
+      "started_at": "2025-04-25T08:00:01Z",
+      "finished_at": "2025-04-25T08:01:47Z",
+      "status": "success",
+      "articles_fetched": 312,
+      "articles_selected": 25,
+      "trigger": "scheduler",
+      "error": null
+    }
+  ]
+}
+```
+
+`POST /pipeline/run` returns `503` when `ADMIN_API_KEY` is not configured, and `401` on a
+wrong key — so the endpoint is never exposed unprotected by accident.
+
 ## Configuration
 
 | Variable | Default | Description |
@@ -87,6 +122,7 @@ APScheduler `BackgroundScheduler` fires `pipeline.run_daily()` at **08:00** loca
 | `GEMINI_API_KEY` | — | Google Gemini key |
 | `TZ` | `Europe/Bucharest` | Local timezone for scheduler |
 | `DAILY_RUN_HOUR` | `8` | Hour of day to run pipeline |
+| `ADMIN_API_KEY` | — | Protects `POST /pipeline/run`; leave empty to disable |
 
 ## Deployment (planned)
 

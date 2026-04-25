@@ -25,12 +25,12 @@
 ## Step 6 — Scheduler live & pipeline hardening
 
 - [x] GitHub Actions CI runs `pytest` on every PR and push to `main`
+- [x] Add pipeline run metadata table (run_at, articles_fetched, articles_selected)
+- [x] Add `/pipeline/run` admin endpoint (POST, protected with API key)
+- [x] Expose pipeline status via `/pipeline/status`
 
 - [ ] Smoke-test the full pipeline against live RSS feeds
 - [ ] Handle sources with no RSS (html.py fallback for sites like DeepMind Blog)
-- [ ] Add pipeline run metadata table (run_at, articles_fetched, articles_selected)
-- [ ] Add `/pipeline/run` admin endpoint (POST, protected with API key)
-- [ ] Expose pipeline status via `/pipeline/status`
 
 ## Step 7 — Docker Compose polish
 
