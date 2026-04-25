@@ -1,0 +1,66 @@
+name: "Copilot Setup Steps"
+
+# This workflow pre-installs the project's dependencies into the Copilot
+# coding agent's environment BEFORE the firewall is enabled, so the agent
+# can start work immediately on each task without re-installing Python
+# packages or running `npm ci` from scratch.
+#
+# Docs: https://gh.io/copilot/actions-setup-steps
+#
+# IMPORTANT:
+# - The job MUST be named `copilot-setup-steps` (this is how Copilot finds it).
+# - Keep this workflow fast; it runs at the start of every Copilot session.
+
+on:
+  # Allow manual runs from the Actions tab to test the setup.
+  workflow_dispatch:
+  # Re-run when this file changes so we catch breakage early.
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ---------- Backend (Python / FastAPI) ----------
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Smoke check backend imports
+        run: python -m compileall backend/app
+
+      # ---------- Web (Node / Next.js) ----------
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install JavaScript dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Smoke check web tooling
+        working-directory: web
+        run: npx --no-install next --version
