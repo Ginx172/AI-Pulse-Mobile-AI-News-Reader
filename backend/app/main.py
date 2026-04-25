@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.db import create_tables, get_db
 from app.models import Article, CustomSource, Source, SourceOverride
+from app.routers.pipeline import router as pipeline_router
 from app.rss_autodiscover import _is_safe_url, autodiscover_rss
 from app.scheduler import start_scheduler
 from app.sources_loader import load_all_sources, load_official_sources
@@ -32,6 +33,8 @@ async def lifespan(app: FastAPI):  # noqa: ARG001
 
 
 app = FastAPI(title="AI Pulse", version="0.1.0", lifespan=lifespan)
+
+app.include_router(pipeline_router)
 
 
 # ─── Pydantic response schemas ────────────────────────────────────────────────

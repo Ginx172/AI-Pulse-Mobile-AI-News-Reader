@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import datetime
 import logging
+from datetime import timezone
 
 from app.db import SessionLocal, create_tables
-from app.models import Article, Source
+from app.models import Article, PipelineRun, Source
 from app.ranking import rank_and_select
 from app.scrapers import ArticleDraft
 from app.scrapers import rss as rss_scraper
@@ -50,39 +51,48 @@ def _dedupe(drafts: list[ArticleDraft]) -> list[ArticleDraft]:
     return unique
 
 
-def run_daily() -> None:
-    """Execute the full daily pipeline and persist results."""
+def run_daily(trigger: str = "scheduler") -> PipelineRun:
+    """Execute the full daily pipeline, persist results, and record a PipelineRun row."""
     logger.info("Daily pipeline starting …")
     create_tables()
 
-    sources = load_all_sources()
-    # Use effective_weight (respects weight_override) for ranking
-    source_weights = {s["id"]: s.get("effective_weight", s.get("weight", 1.0)) for s in sources}
-
-    # 1. Scrape all active sources (inactive already filtered by load_all_sources)
-    all_drafts: list[ArticleDraft] = []
-    for source in sources:
-        try:
-            drafts = _scrape_source(source)
-            all_drafts.extend(drafts)
-        except Exception as exc:
-            logger.warning("Scraper error for %s: %s", source.get("id"), exc)
-
-    logger.info("Total raw articles fetched: %d", len(all_drafts))
-
-    # 2. Deduplicate
-    unique_drafts = _dedupe(all_drafts)
-    logger.info("After deduplication: %d unique articles", len(unique_drafts))
-
-    # 3. Rank and select top 25
-    top_articles = rank_and_select(unique_drafts, source_weights)
-    logger.info("Top %d articles selected", len(top_articles))
-
-    today = datetime.date.today()
-
-    # 4. Summarise and persist
     db = SessionLocal()
+    run = PipelineRun(
+        started_at=datetime.datetime.now(timezone.utc),
+        status="running",
+        trigger=trigger,
+    )
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+
     try:
+        sources = load_all_sources()
+        # Use effective_weight (respects weight_override) for ranking
+        source_weights = {s["id"]: s.get("effective_weight", s.get("weight", 1.0)) for s in sources}
+
+        # 1. Scrape all active sources (inactive already filtered by load_all_sources)
+        all_drafts: list[ArticleDraft] = []
+        for source in sources:
+            try:
+                drafts = _scrape_source(source)
+                all_drafts.extend(drafts)
+            except Exception as exc:
+                logger.warning("Scraper error for %s: %s", source.get("id"), exc)
+
+        logger.info("Total raw articles fetched: %d", len(all_drafts))
+
+        # 2. Deduplicate
+        unique_drafts = _dedupe(all_drafts)
+        logger.info("After deduplication: %d unique articles", len(unique_drafts))
+
+        # 3. Rank and select top 25
+        top_articles = rank_and_select(unique_drafts, source_weights)
+        logger.info("Top %d articles selected", len(top_articles))
+
+        today = datetime.date.today()
+
+        # 4. Summarise and persist
         # Mark previous selections for today as unselected
         db.query(Article).filter(
             Article.day == today, Article.selected_for_today
@@ -135,6 +145,23 @@ def run_daily() -> None:
 
         db.commit()
         logger.info("Pipeline complete — %d articles saved for %s", len(top_articles), today)
+
+        run.status = "success"
+        run.finished_at = datetime.datetime.now(timezone.utc)
+        run.articles_fetched = len(unique_drafts)
+        run.articles_selected = len(top_articles)
+        db.commit()
+        db.refresh(run)
+        return run
+
+    except Exception as exc:
+        run.status = "failed"
+        run.finished_at = datetime.datetime.now(timezone.utc)
+        run.error = str(exc)[:1000]
+        db.commit()
+        db.refresh(run)
+        logger.error("Pipeline failed: %s", exc)
+        raise
     finally:
         db.close()
 
