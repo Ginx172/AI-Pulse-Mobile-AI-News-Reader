@@ -278,14 +278,16 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold mb-3">Pipeline</h2>
           <div className="rounded-lg border p-4 text-sm text-muted-foreground space-y-2">
             <p>
-              The daily pipeline runs at <strong>08:00 UTC</strong> and fetches
+              The daily pipeline runs at <strong>08:00</strong> (configurable
+              via the <code>DAILY_RUN_HOUR</code> env var, default timezone
+              Europe/Bucharest) and fetches
               articles from all active sources, deduplicates by URL, ranks by
               recency + source weight + keyword relevance, and summarises the
               top 25 with an LLM.
             </p>
             <p>
               Articles are cached until the next run. If you see an empty feed,
-              check back after 08:00 UTC.
+              check back after 08:00.
             </p>
           </div>
         </section>
