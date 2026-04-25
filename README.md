@@ -1,5 +1,7 @@
 # AI Pulse — Your AI News Heartbeat
 
+![CI](https://github.com/Ginx172/AI-Pulse-Mobile-AI-News-Reader/actions/workflows/ci.yml/badge.svg)
+
 > *Adapted from the [full product description](https://github.com/Ginx172/market-hawk/blob/copilot/top-100-ai-information-sources/AI_NEWS_READER_APP_DESCRIPTION.md).*
 
 **Pulse AI** is a web-first AI news reader that aggregates the **Top 100 AI information sources** — research labs, arXiv, newsletters, Substack, podcasts, YouTube, Reddit, and open-source communities — deduplicates stories, ranks them, summarises them with an LLM, and serves the **top 25 daily** into a Next.js 15 PWA feed.
