@@ -67,7 +67,7 @@ A daily APScheduler job fires at 08:00 (configurable) and runs the full pipeline
 | Backend | Python 3.11, FastAPI, SQLAlchemy, SQLite (dev) / Postgres (prod) |
 | Scheduler | APScheduler (cron, no Celery) |
 | Scrapers | feedparser, httpx + BeautifulSoup, Reddit JSON, YouTube RSS |
-| Summariser | Anthropic Claude Haiku 3.5 → Gemini 2.0 Flash → extractive fallback |
+| Summariser | Groq → Anthropic Claude Haiku 4.5 → OpenAI → Mistral → Together AI → Gemini → extractive fallback |
 | Web | Next.js 15 PWA (TypeScript, App Router, TailwindCSS, shadcn/ui) |
 | Deploy | Railway (backend), Vercel / any Node host (web) |
 

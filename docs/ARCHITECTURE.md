@@ -32,9 +32,13 @@
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                     SUMMARISER                                  │
-│  1. Anthropic Claude Haiku 3.5 (primary)                        │
-│  2. Gemini 2.0 Flash (fallback)                                 │
-│  3. Extractive — first 3 sentences (no API)                     │
+│  1. Groq llama-3.3-70b-versatile (primary — free tier)          │
+│  2. Anthropic claude-haiku-4-5-20251001 (high quality, cheap)   │
+│  3. OpenAI gpt-4o-mini (premium fallback)                       │
+│  4. Mistral mistral-small-latest                                 │
+│  5. Together AI Llama-3.3-70B-Instruct-Turbo                    │
+│  6. Gemini 2.0 Flash (free fallback when quota OK)              │
+│  7. Extractive — first 3 sentences (no API)                     │
 └────────────────────────┬────────────────────────────────────────┘
                          │
                          ▼
@@ -75,7 +79,11 @@ APScheduler `BackgroundScheduler` fires `pipeline.run_daily()` at **08:00** loca
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `DATABASE_URL` | `sqlite:///./news.db` | SQLAlchemy DB URL |
+| `GROQ_API_KEY` | — | Groq key (primary summariser) |
 | `ANTHROPIC_API_KEY` | — | Anthropic Claude key |
+| `OPENAI_API_KEY` | — | OpenAI key |
+| `MISTRAL_API_KEY` | — | Mistral AI key |
+| `TOGETHER_API_KEY` | — | Together AI key |
 | `GEMINI_API_KEY` | — | Google Gemini key |
 | `TZ` | `Europe/Bucharest` | Local timezone for scheduler |
 | `DAILY_RUN_HOUR` | `8` | Hour of day to run pipeline |
