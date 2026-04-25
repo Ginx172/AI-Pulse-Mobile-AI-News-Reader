@@ -53,15 +53,15 @@
                          │  JSON over HTTP
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     REACT NATIVE / EXPO                         │
-│  Feed screen → Article detail → in-app browser                 │
-│  expo-router  ·  expo-web-browser                               │
+│                     NEXT.JS 15 PWA                              │
+│  Feed (/) → Article detail → Settings + Manage Sources         │
+│  App Router  ·  TailwindCSS  ·  shadcn/ui  ·  next-pwa         │
 └────────────────────────┬────────────────────────────────────────┘
                          │
                          ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                     PUSH NOTIFICATIONS (future)                 │
-│  expo-notifications → FCM → iOS/Android                        │
+│  Web Push API → Service Worker                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -85,7 +85,7 @@ APScheduler `BackgroundScheduler` fires `pipeline.run_daily()` at **08:00** loca
 | Service | Platform |
 |---------|----------|
 | Backend API | Railway |
-| Mobile build | Expo EAS |
+| Web app | Vercel / any Node host |
 | Database (prod) | Railway Postgres |
 
 ## Custom Sources

@@ -15,8 +15,8 @@ sdist/
 wheels/
 pip-wheel-metadata/
 .installed.cfg
-lib/
-lib64/
+/lib/
+/lib64/
 .venv/
 venv/
 ENV/
@@ -75,6 +75,15 @@ yarn-error.log*
 # EAS Build
 .easignore
 eas.json.local
+
+# Next.js / Web
+web/.next/
+web/node_modules/
+web/.env.local
+web/public/sw.js
+web/public/workbox-*.js
+web/public/worker-*.js
+web/public/swe-worker-*.js
 
 # TypeScript
 *.tsbuildinfo
