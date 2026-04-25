@@ -10,6 +10,10 @@ class Settings(BaseSettings):
 
     anthropic_api_key: str = ""
     gemini_api_key: str = ""
+    openai_api_key: str = ""
+    groq_api_key: str = ""
+    mistral_api_key: str = ""
+    together_api_key: str = ""
     database_url: str = "sqlite:///./news.db"
     tz: str = "Europe/Bucharest"
     daily_run_hour: int = 8

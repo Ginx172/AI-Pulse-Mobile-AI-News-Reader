@@ -23,13 +23,17 @@ _tmp_db.close()
 os.environ["DATABASE_URL"] = f"sqlite:///{_tmp_db.name}"
 os.environ.setdefault("ANTHROPIC_API_KEY", "")
 os.environ.setdefault("GEMINI_API_KEY", "")
+os.environ.setdefault("GROQ_API_KEY", "")
+os.environ.setdefault("OPENAI_API_KEY", "")
+os.environ.setdefault("MISTRAL_API_KEY", "")
+os.environ.setdefault("TOGETHER_API_KEY", "")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app.main import app  # noqa: E402
 from app.ranking import rank_and_select  # noqa: E402
 from app.scrapers import ArticleDraft  # noqa: E402
-from app.summarizer import _summarise_extractive  # noqa: E402
+from app.summarizer import _summarise_extractive, summarise  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -147,3 +151,29 @@ def test_extractive_short_text():
     text = "Short text."
     result = _summarise_extractive(text, title="Short")
     assert "Short text" in result
+
+
+# ─── Test 6: summarise() falls through to extractive with no keys ─────────────
+
+
+def test_summarise_falls_back_to_extractive_without_keys(monkeypatch):
+    """When all provider API keys are empty, summarise() uses extractive fallback."""
+    monkeypatch.setattr("app.summarizer.settings.groq_api_key", "")
+    monkeypatch.setattr("app.summarizer.settings.anthropic_api_key", "")
+    monkeypatch.setattr("app.summarizer.settings.openai_api_key", "")
+    monkeypatch.setattr("app.summarizer.settings.mistral_api_key", "")
+    monkeypatch.setattr("app.summarizer.settings.together_api_key", "")
+    monkeypatch.setattr("app.summarizer.settings.gemini_api_key", "")
+
+    text = (
+        "Researchers at DeepMind have published a new paper on reinforcement learning. "
+        "The paper shows significant improvements over previous baselines. "
+        "The code is available on GitHub under an open-source licence. "
+        "This fourth sentence should not appear."
+    )
+    result = summarise(text, title="DeepMind RL Paper")
+    # Should return extractive summary (first 3 sentences, no API calls)
+    assert isinstance(result, str)
+    assert len(result) > 0
+    assert "Researchers at DeepMind" in result
+

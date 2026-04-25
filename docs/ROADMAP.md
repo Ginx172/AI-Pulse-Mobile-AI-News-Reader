@@ -11,12 +11,16 @@
 
 ---
 
-## Step 5 — Summariser wiring & API keys
+## Step 5 — Summariser wiring & API keys ✅
 
-- [ ] Wire `ANTHROPIC_API_KEY` in `.env` and validate Claude Haiku responses end-to-end
-- [ ] Wire `GEMINI_API_KEY` and validate Gemini Flash fallback
-- [ ] Add rate-limiting / retry logic for LLM calls
-- [ ] Log token usage per pipeline run
+- [x] Wire `GROQ_API_KEY` — primary summariser (llama-3.3-70b-versatile, free tier)
+- [x] Wire `ANTHROPIC_API_KEY` — Claude claude-haiku-4-5-20251001 fallback
+- [x] Wire `OPENAI_API_KEY` — gpt-4o-mini fallback
+- [x] Wire `MISTRAL_API_KEY` — mistral-small-latest fallback
+- [x] Wire `TOGETHER_API_KEY` — Llama-3.3-70B-Instruct-Turbo fallback
+- [x] Wire `GEMINI_API_KEY` — gemini-2.0-flash last LLM fallback
+- [x] 6-provider chain with extractive safety net (Groq → Anthropic → OpenAI → Mistral → Together → Gemini → Extractive)
+- [x] Per-provider logging (provider name, model, chars)
 
 ## Step 6 — Scheduler live & pipeline hardening
 
