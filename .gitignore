@@ -76,6 +76,15 @@ yarn-error.log*
 .easignore
 eas.json.local
 
+# Next.js / Web
+web/.next/
+web/node_modules/
+web/.env.local
+web/public/sw.js
+web/public/workbox-*.js
+web/public/worker-*.js
+web/public/swe-worker-*.js
+
 # TypeScript
 *.tsbuildinfo
 

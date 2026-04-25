@@ -15,6 +15,16 @@ services:
       - ./backend/.env
     restart: unless-stopped
 
+  # Web app (optional — can run independently with `cd web && npm run start`)
+  # web:
+  #   build: ./web
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NEXT_PUBLIC_API_URL=http://backend:8000
+  #   depends_on:
+  #     - backend
+
   # Postgres service (uncomment for production)
   # db:
   #   image: postgres:16-alpine

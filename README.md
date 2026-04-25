@@ -1,15 +1,15 @@
-# AI Pulse — Mobile AI News Reader
+# AI Pulse — Your AI News Heartbeat
 
 > *Adapted from the [full product description](https://github.com/Ginx172/market-hawk/blob/copilot/top-100-ai-information-sources/AI_NEWS_READER_APP_DESCRIPTION.md).*
 
-**AI Pulse** is a mobile-first AI news reader that aggregates the **Top 100 AI information sources** — research labs, arXiv, newsletters, Substack, podcasts, YouTube, Reddit, and open-source communities — deduplicates stories, ranks them, summarises them with an LLM, and serves the **top 25 daily** into a React Native mobile feed with push notifications and offline support.
+**Pulse AI** is a web-first AI news reader that aggregates the **Top 100 AI information sources** — research labs, arXiv, newsletters, Substack, podcasts, YouTube, Reddit, and open-source communities — deduplicates stories, ranks them, summarises them with an LLM, and serves the **top 25 daily** into a Next.js 15 PWA feed.
 
 ## Repository layout
 
 ```
 .
 ├── backend/          # Python 3.11 FastAPI backend
-├── mobile/           # React Native + Expo (TypeScript, expo-router)
+├── web/              # Next.js 15 PWA (TypeScript, App Router, TailwindCSS)
 ├── sources/          # Machine-readable catalog of 103 AI sources (YAML) + custom sources
 └── docs/             # Architecture diagram, roadmap
 ```
@@ -35,13 +35,16 @@ Key endpoints:
 | GET | `/articles/today` | Top 25 articles for today |
 | GET | `/articles/{id}` | Single article detail |
 
-### Mobile
+### Web
 
 ```bash
-cd mobile
+cd web
 npm install
-npx expo start
+cp .env.example .env.local
+npm run dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000).
 
 ### Docker Compose (backend + SQLite volume)
 
@@ -52,7 +55,7 @@ docker-compose up --build
 ## Pipeline overview
 
 ```
-Sources YAML → Scrapers → Dedupe by URL → Ranker → Top 25 → Summariser → SQLite DB → FastAPI → Expo mobile
+Sources YAML → Scrapers → Dedupe by URL → Ranker → Top 25 → Summariser → SQLite DB → FastAPI → Next.js PWA
 ```
 
 A daily APScheduler job fires at 08:00 (configurable) and runs the full pipeline.
@@ -65,9 +68,8 @@ A daily APScheduler job fires at 08:00 (configurable) and runs the full pipeline
 | Scheduler | APScheduler (cron, no Celery) |
 | Scrapers | feedparser, httpx + BeautifulSoup, Reddit JSON, YouTube RSS |
 | Summariser | Anthropic Claude Haiku 3.5 → Gemini 2.0 Flash → extractive fallback |
-| Mobile | React Native + Expo (TypeScript, expo-router), EAS Build |
-| Push | expo-notifications → FCM |
-| Deploy | Railway (backend), Expo EAS (mobile) |
+| Web | Next.js 15 PWA (TypeScript, App Router, TailwindCSS, shadcn/ui) |
+| Deploy | Railway (backend), Vercel / any Node host (web) |
 
 ## License
 
